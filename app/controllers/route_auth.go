@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"golang_todo/app/models"
 	"log"
 	"net/http"
-	"todo_app/app/models"
 )
 
 func signup(w http.ResponseWriter, r *http.Request) {

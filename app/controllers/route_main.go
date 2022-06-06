@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"fmt"
+	"golang_todo/app/models"
 	"log"
 	"net/http"
-	"todo_app/app/models"
 )
 
 func top(w http.ResponseWriter, r *http.Request) {

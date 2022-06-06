@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"todo_app/app/controllers"
-	"todo_app/app/models"
+	"golang_todo/app/controllers"
+	"golang_todo/app/models"
 )
 
 func main() {

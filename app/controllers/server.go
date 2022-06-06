@@ -3,12 +3,13 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"golang_todo/app/models"
+	"golang_todo/config"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"text/template"
-	"todo_app/app/models"
-	"todo_app/config"
 )
 
 // HTML生成
@@ -70,5 +71,6 @@ func StartMainServer() error {
 	http.HandleFunc("/todos/delete/", parseURL(todoDelete))
 
 	// 第2引数にnilを渡すことで、デフォルト設定(ページが存在しない場合に404を返す)を使用する
-	return http.ListenAndServe(":"+config.Config.Port, nil)
+	port := os.Getenv("PORT")
+	return http.ListenAndServe(":"+port, nil)
 }
