@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"regexp"
+	"strconv"
 	"text/template"
 	"todo_app/app/models"
 	"todo_app/config"
@@ -32,6 +34,22 @@ func session(writer http.ResponseWriter, request *http.Request) (sess models.Ses
 	return
 }
 
+var validPath = regexp.MustCompile("^/todos/(edit|save|update|delete)/([0-9]+)$")
+
+// URLからIDを抜き出す関数
+func parseURL(fn func(http.ResponseWriter, *http.Request, int)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		q := validPath.FindStringSubmatch(r.URL.Path)
+		if q == nil {
+			http.NotFound(w, r)
+			return
+		}
+		id, _ := strconv.Atoi(q[2])
+		fmt.Println(id)
+		fn(w, r, id)
+	}
+}
+
 // サーバー起動
 func StartMainServer() error {
 	// 静的ファイル読み込み
@@ -47,6 +65,9 @@ func StartMainServer() error {
 	http.HandleFunc("/todos", index)
 	http.HandleFunc("/todos/new", todoNew)
 	http.HandleFunc("/todos/save", todoSave)
+	http.HandleFunc("/todos/edit/", parseURL(todoEdit))
+	http.HandleFunc("/todos/update/", parseURL(todoUpdate))
+	http.HandleFunc("/todos/delete/", parseURL(todoDelete))
 
 	// 第2引数にnilを渡すことで、デフォルト設定(ページが存在しない場合に404を返す)を使用する
 	return http.ListenAndServe(":"+config.Config.Port, nil)
